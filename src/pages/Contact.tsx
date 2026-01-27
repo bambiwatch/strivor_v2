@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Instagram, MapPin, Send } from "lucide-react";
+import { Mail, Instagram, Send } from "lucide-react";
 import { PageHero } from "../components/PageHero";
 
 export default function Contact() {
