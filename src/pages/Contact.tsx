@@ -35,7 +35,7 @@ export default function Contact() {
                       href="mailto:strivorsports.com"
                       className="text-gray-600 hover:text-primary transition-colors break-all"
                     >
-                      Rhys@StrivorSports.com
+                      Info@StrivorSports.com
                     </a>
                   </div>
                 </div>
