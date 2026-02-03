@@ -1,63 +1,9 @@
-import { useState } from "react";
 import { Mail, Instagram, Send } from "lucide-react";
+import { useForm, ValidationError } from "@formspree/react";
 import { PageHero } from "../components/PageHero";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: "success" | "error" | null;
-    message: string;
-  }>({ type: null, message: "" });
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus({ type: null, message: "" });
-
-    // Simulate form submission (replace with actual API call)
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSubmitStatus({
-        type: "success",
-        message:
-          "Thank you! Your message has been sent successfully. We'll get back to you soon.",
-      });
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-      });
-    } catch (error) {
-      setSubmitStatus({
-        type: "error",
-        message: "Something went wrong. Please try again later.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const [state, handleSubmit] = useForm("mdadryvp");
 
   return (
     <>
@@ -80,7 +26,7 @@ export default function Contact() {
               </h2>
               <div className="space-y-6">
                 <div className="flex flex-col items-center lg:flex-row lg:items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 lg:w-12 lg:h-12 bg-primary rounded-lg flex items-center justify-center">
+                  <div className="shrink-0 w-14 h-14 lg:w-12 lg:h-12 bg-primary rounded-lg flex items-center justify-center">
                     <Mail className="h-7 w-7 lg:h-6 lg:w-6 text-white" />
                   </div>
                   <div className="text-center lg:text-left">
@@ -89,17 +35,19 @@ export default function Contact() {
                       href="mailto:strivorsports.com"
                       className="text-gray-600 hover:text-primary transition-colors break-all"
                     >
-                      Strivor.sports@gmail.com
+                      Rhys@StrivorSports.com
                     </a>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-center lg:flex-row lg:items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 lg:w-12 lg:h-12 bg-primary rounded-lg flex items-center justify-center">
+                  <div className="shrink-0 w-14 h-14 lg:w-12 lg:h-12 bg-primary rounded-lg flex items-center justify-center">
                     <Instagram className="h-7 w-7 lg:h-6 lg:w-6 text-white" />
                   </div>
                   <div className="text-center lg:text-left">
-                    <h3 className="font-semibold text-gray-900 mb-1">Instagram</h3>
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      Instagram
+                    </h3>
                     <a
                       href="https://www.instagram.com/strivor_sports_academy"
                       className="text-gray-600 hover:text-primary transition-colors"
@@ -108,8 +56,6 @@ export default function Contact() {
                     </a>
                   </div>
                 </div>
-
-
               </div>
             </div>
 
@@ -122,164 +68,166 @@ export default function Contact() {
                     About Us
                   </span>
                 </div>
-                {submitStatus.type && (
-                  <div
-                    className={`mb-6 p-4 rounded-lg ${
-                      submitStatus.type === "success"
-                        ? "bg-green-50 text-green-800 border border-green-200"
-                        : "bg-red-50 text-red-800 border border-red-200"
-                    }`}
+                {state.succeeded ? (
+                  <div className="mb-6 p-4 rounded-lg bg-green-50 text-green-800 border border-green-200">
+                    Thank you! Your message has been sent successfully. We'll
+                    get back to you soon.
+                  </div>
+                ) : (
+                  <form
+                    action="https://formspree.io/f/mdadryvp"
+                    method="POST"
+                    onSubmit={handleSubmit}
+                    className="space-y-6"
                   >
-                    {submitStatus.message}
-                  </div>
-                )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium mb-2"
+                        >
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-white placeholder-gray-400"
+                          placeholder="John Doe"
+                        />
+                        <ValidationError
+                          prefix="Name"
+                          field="name"
+                          errors={state.errors}
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium  mb-2"
-                      >
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="John Doe"
-                      />
+                      <div>
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium mb-2"
+                        >
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-white placeholder-gray-400"
+                          placeholder="john@example.com"
+                        />
+                        <ValidationError
+                          prefix="Email"
+                          field="email"
+                          errors={state.errors}
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="phone"
+                          className="block text-sm font-medium text-white mb-2"
+                        >
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-white placeholder-gray-400"
+                          placeholder="+44 123 456 7890"
+                        />
+                        <ValidationError
+                          prefix="Phone"
+                          field="phone"
+                          errors={state.errors}
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="subject"
+                          className="block text-sm font-medium text-white mb-2"
+                        >
+                          Subject *
+                        </label>
+                        <select
+                          id="subject"
+                          name="subject"
+                          required
+                          className="w-full px-4 py-3 border text-white border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all bg-gray-800 [&_option]:bg-gray-800 [&_option]:text-white"
+                        >
+                          <option value="">Select a subject</option>
+                          <option value="general">General Inquiry</option>
+                          <option value="parents">For Parents</option>
+                          <option value="schools">For Schools</option>
+                          <option value="After School Clubs">
+                            After School Clubs
+                          </option>
+                          <option value="One to One Coaching">
+                            One to One Coaching
+                          </option>
+                          <option value="Holiday Camps">Holiday Camps</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <ValidationError
+                          prefix="Subject"
+                          field="subject"
+                          errors={state.errors}
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      </div>
                     </div>
 
                     <div>
                       <label
-                        htmlFor="email"
-                        className="block text-sm font-medium  mb-2"
-                      >
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="john@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label
-                        htmlFor="phone"
+                        htmlFor="message"
                         className="block text-sm font-medium text-white mb-2"
                       >
-                        Phone Number
+                        Message *
                       </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                        placeholder="+44 123 456 7890"
+                      <textarea
+                        id="message"
+                        name="message"
+                        required
+                        rows={6}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none text-white placeholder-gray-400"
+                        placeholder="Tell us how we can help you..."
+                      />
+                      <ValidationError
+                        prefix="Message"
+                        field="message"
+                        errors={state.errors}
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
 
-                    <div>
-                      <label
-                        htmlFor="subject"
-                        className="block text-sm font-medium text-white mb-2"
-                      >
-                        Subject *
-                      </label>
-                      <select
-                        id="subject"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 border text-white border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                      >
-                        <option value="" className="text-black">
-                          Select a subject
-                        </option>
-                        <option value="general" className="text-black">
-                          General Inquiry
-                        </option>
-                        <option value="parents" className="text-black">
-                          For Parents
-                        </option>
-                        <option value="schools" className="text-black">
-                          For Schools
-                        </option>
-                        <option
-                          value="After School Clubs"
-                          className="text-black"
-                        >
-                          After School Clubs
-                        </option>
-                        <option
-                          value="One to One Coaching"
-                          className="text-black"
-                        >
-                          One to One Coaching
-                        </option>
-                        <option value="Holiday Camps" className="text-black">
-                          Holiday Camps
-                        </option>
-                        <option value="other" className="text-black">
-                          Other
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-white mb-2"
+                    <button
+                      type="submit"
+                      disabled={state.submitting}
+                      className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 hover:bg-primary-700 hover:scale-105 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
                     >
-                      Message *
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
-                      placeholder="Tell us how we can help you..."
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="group w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 hover:bg-primary-700 hover:scale-105 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className="animate-spin">⏳</span>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                        Send Message
-                      </>
-                    )}
-                  </button>
-                </form>
+                      {state.submitting ? (
+                        <>
+                          <span className="animate-spin">⏳</span>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                          Send Message
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           </div>
