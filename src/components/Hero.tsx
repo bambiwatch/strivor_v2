@@ -281,13 +281,13 @@ export function Hero() {
                 </button>
               </div>
               {/* Carousel indicator: modern pill with dots + counter */}
-              <div className="flex items-center justify-center mt-3">
+              <div className="flex items-center justify-center mt-3 px-2">
                 <div
-                  className="inline-flex items-center gap-3 px-4 py-2.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-lg"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 lg:gap-3 px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 lg:py-2.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-lg max-w-full"
                   role="tablist"
                   aria-label="Carousel slides"
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2">
                     {HERO_CAROUSEL_ITEMS.map((_, idx) => (
                       <button
                         key={idx}
@@ -299,13 +299,13 @@ export function Hero() {
                         onClick={() => goToIndex(idx)}
                         className={`relative rounded-full transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:pointer-events-none ${
                           idx === displayIndex
-                            ? "w-7 h-2 bg-white shadow-[0_0_12px_rgba(255,255,255,0.4)]"
-                            : "w-2 h-2 bg-white/40 hover:bg-white/60 hover:scale-110"
+                            ? "w-5 h-1.5 sm:w-6 sm:h-2 lg:w-7 lg:h-2 bg-white shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+                            : "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/40 hover:bg-white/60 hover:scale-110"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-xs font-medium text-white/70 tabular-nums tracking-tight border-l border-white/20 pl-3">
+                  <span className="text-[10px] sm:text-xs font-medium text-white/70 tabular-nums tracking-tight border-l border-white/20 pl-1.5 sm:pl-2 lg:pl-3 whitespace-nowrap">
                     {displayIndex + 1}
                     <span className="text-white/50">/{total}</span>
                   </span>
